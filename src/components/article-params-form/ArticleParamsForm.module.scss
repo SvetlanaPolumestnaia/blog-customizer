@@ -14,7 +14,9 @@
 
 .form {
 	display: flex;
+	gap: 40px;
 	flex-shrink: 0;
+	//margin-bottom: 0;
 	flex-direction: column;
 	box-sizing: border-box;
 	width: 616px;
@@ -28,5 +30,4 @@
 .bottomContainer {
 	display: flex;
 	justify-content: space-between;
-	margin-top: auto;
 }

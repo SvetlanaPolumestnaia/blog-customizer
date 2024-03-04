@@ -20,10 +20,9 @@ type SelectProps = {
 	title?: string;
 };
 
-export const Select = (props: SelectProps) => {
-	const { options, placeholder, selected, onChange, onClose, title } = props;
+export const Select = (props: SelectProps & { rootRef: React.RefObject<HTMLDivElement> }) => {
+	const { options, placeholder, selected, onChange, onClose, title, rootRef } = props;
 	const [isOpen, setIsOpen] = useState<boolean>(false);
-	const rootRef = useRef<HTMLDivElement>(null);
 	const placeholderRef = useRef<HTMLDivElement>(null);
 
 	useOutsideClickClose({
@@ -42,8 +41,13 @@ export const Select = (props: SelectProps) => {
 		setIsOpen(false);
 		onChange?.(option);
 	};
+
 	const handlePlaceHolderClick: MouseEventHandler<HTMLDivElement> = () => {
 		setIsOpen((isOpen) => !isOpen);
+	};
+
+	const handleSelectClick: MouseEventHandler<HTMLDivElement> = (e) => {
+		e.stopPropagation();
 	};
 
 	return (
@@ -59,7 +63,8 @@ export const Select = (props: SelectProps) => {
 				className={styles.selectWrapper}
 				ref={rootRef}
 				data-is-active={isOpen}
-				data-testid='selectWrapper'>
+				data-testid='selectWrapper'
+				onClick={handleSelectClick}>
 				<img
 					src={arrowDown}
 					alt='иконка стрелочки'
