@@ -18,7 +18,7 @@ export const ArrowButtonStory: Story = {
 
 		return (
 			<>
-				<ArrowButton onClick={handleButtonClick}/>
+				<ArrowButton onClick={handleButtonClick} isContainerOpen={true}/>
 			</>
 		);
 	},

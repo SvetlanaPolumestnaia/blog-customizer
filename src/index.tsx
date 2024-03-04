@@ -3,7 +3,7 @@ import { StrictMode, CSSProperties, useState } from 'react';
 import clsx from 'clsx';
 
 import { Article } from './components/article/Article';
-import { ArticleParamsForm, PageStyles } from './components/article-params-form/ArticleParamsForm';
+import { ArticleParamsForm, PageStyles, AppliedStyles } from './components/article-params-form/ArticleParamsForm';
 import { defaultArticleState } from './constants/articleProps';
 
 import './styles/index.scss';
@@ -14,24 +14,25 @@ export const root = createRoot(domNode);
 
 const App = () => {
 	// добавляем стейты стилей и страницы
-	const [appliedStyles, setStyles] = useState(false);
+	const [appliedStyles, setStyles] = useState<AppliedStyles | undefined>(undefined);
 	const [pageStyles, setPageStyles] = useState<PageStyles>(defaultArticleState);
 
 	return (
-		<div
+		<main
 			className={clsx(styles.main)}
 			style={
-				{
-					'--font-family': appliedStyles ? pageStyles.fontFamilyOption.value : defaultArticleState.fontFamilyOption.value,
-					'--font-size': appliedStyles ? pageStyles.fontSizeOption.value : defaultArticleState.fontSizeOption.value,
-					'--font-color': appliedStyles ? pageStyles.fontColor.value : defaultArticleState.fontColor.value,
-					'--container-width': appliedStyles ? pageStyles.contentWidth.value : defaultArticleState.contentWidth.value,
-					'--bg-color': appliedStyles ? pageStyles.backgroundColor.value : defaultArticleState.backgroundColor.value,
-        } as CSSProperties
-			}>
+				appliedStyles && {
+				  '--font-family': pageStyles.fontFamilyOption.value,
+				  '--font-size': pageStyles.fontSizeOption.value,
+				  '--font-color': pageStyles.fontColor.value,
+				  '--container-width': pageStyles.contentWidth.value,
+				  '--bg-color': pageStyles.backgroundColor.value,
+				} as CSSProperties
+			  }
+			>
 			<ArticleParamsForm setStyles={setStyles} setPageStyles={setPageStyles}/>
 			<Article />
-		</div>
+		</main>
 	);
 };
 

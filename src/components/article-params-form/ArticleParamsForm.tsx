@@ -19,12 +19,20 @@ export type PageStyles = {
 	fontColor: OptionType;
 	backgroundColor: OptionType;
 	contentWidth: OptionType;
-  };
+};
   
+export type AppliedStyles = {
+	fontFamily: string;
+	fontSize: string;
+	fontColor: string;
+	contentWidth: string;
+	backgroundColor: string;
+} | undefined;
+
 interface ArticleParamsFormProps {
-	setStyles: React.Dispatch<React.SetStateAction<boolean>>;
+	setStyles: React.Dispatch<React.SetStateAction<AppliedStyles>>;
 	setPageStyles: React.Dispatch<React.SetStateAction<PageStyles>>;
-  }
+};
 
 export const ArticleParamsForm: React.FC<ArticleParamsFormProps> = ({ setStyles, setPageStyles }) => {
 	// для определения состояния открыая или закрытая форма
@@ -36,6 +44,7 @@ export const ArticleParamsForm: React.FC<ArticleParamsFormProps> = ({ setStyles,
 
 	// для закрытия форма кликом вне формы
 	useEffect(() => {
+		if (!isContainerOpen) return;
 		const handleClickOutsideForm = (e: MouseEvent) => {		
 			if (isContainerOpen && 
 				containerRef.current && 
@@ -65,32 +74,23 @@ export const ArticleParamsForm: React.FC<ArticleParamsFormProps> = ({ setStyles,
 	// применение стилей к странице
 	const handleApplyStyles = (e: React.FormEvent) => {
 		e.preventDefault();
-		document.documentElement.style.setProperty('--font-family', selectedFontFamily.value);
-		document.documentElement.style.setProperty('--font-size', selectedFontSize.value);
-		document.documentElement.style.setProperty('--font-color', selectedFontColor.value);
-		document.documentElement.style.setProperty('--container-width', selectedContentWidth.value);
-		document.documentElement.style.setProperty('--bg-color', selectedBackgroundColor.value);
-	
-		setIsContainerOpen(false);
-		setStyles(true);
-		setPageStyles({
-			fontFamilyOption: {
-			  value: selectedFontFamily.value,
-			},
-			fontSizeOption: {
-			  value: selectedFontSize.value,
-			},
-			fontColor: {
-			  value: selectedFontColor.value,
-			},
-			backgroundColor: {
-			  value: selectedBackgroundColor.value,
-			},
-			contentWidth: {
-			  value: selectedContentWidth.value,
-			},
-		  });
 		
+		setStyles({
+			fontFamily: selectedFontFamily.value,
+			fontSize: selectedFontSize.value,
+			fontColor: selectedFontColor.value,
+			contentWidth: selectedContentWidth.value,
+			backgroundColor: selectedBackgroundColor.value,
+		});
+	
+		setPageStyles({
+			fontFamilyOption: { value: selectedFontFamily.value },
+			fontSizeOption: { value: selectedFontSize.value },
+			fontColor: { value: selectedFontColor.value },
+			backgroundColor: { value: selectedBackgroundColor.value },
+			contentWidth: { value: selectedContentWidth.value },
+		});
+		setIsContainerOpen(false);
 	}
 
 	// сброс формы
@@ -102,15 +102,9 @@ export const ArticleParamsForm: React.FC<ArticleParamsFormProps> = ({ setStyles,
 		setContentWidth(defaultArticleState.contentWidth);
 	  };
 	
-	// сброси стилей
+	// сброс стилей
 	const resetStyles = () => {
-		document.documentElement.style.setProperty('--font-family', defaultArticleState.fontFamilyOption.value);
-		document.documentElement.style.setProperty('--font-size', defaultArticleState.fontSizeOption.value);
-		document.documentElement.style.setProperty('--font-color', defaultArticleState.fontColor.value);
-		document.documentElement.style.setProperty('--container-width', defaultArticleState.contentWidth.value);
-		document.documentElement.style.setProperty('--bg-color', defaultArticleState.backgroundColor.value);
-
-		setStyles(false);
+		setStyles(undefined);
 		setPageStyles(defaultArticleState);
 		resetForm();
 	  };
@@ -118,57 +112,45 @@ export const ArticleParamsForm: React.FC<ArticleParamsFormProps> = ({ setStyles,
 	return (
 		<>	
 			<div ref={containerRef}>
-				<ArrowButton onClick={handleArrowButtonClick}/>
-				<aside  className={`${styles.container} ${isContainerOpen ? styles.container_open : ''}`}>
+				<ArrowButton onClick={handleArrowButtonClick} isContainerOpen={isContainerOpen}/>
+				<aside className={`${styles.container} ${isContainerOpen ? styles.container_open : ''}`}>
 					<form className={styles.form} onSubmit={handleApplyStyles}>
-						<div>
-							<Select
-								selected={selectedFontFamily}
-								onChange={setFontFamily}
-								options={fontFamilyOptions}
-								title='Шрифт'
-								rootRef={selectRootRef}
-							/>
-						</div>
-						<div>
-							<RadioGroup
-								selected={selectedFontSize}
-								name='radio'
-								onChange={setFontSize}
-								options={fontSizeOptions}
-								title='Размер шрифта'
-							/>
-						</div>
-						<div>
-							<Select
-								selected={selectedFontColor}
-								onChange={setFontColor}
-								options={fontColors}
-								title='Цвет шрифта'
-								rootRef={selectRootRef}
-							/>
-						</div>
-						<div>
-							<Separator />
-						</div>
-						<div>
-							<Select
-								selected={selectedBackgroundColor}
-								onChange={setBackgroundColor}
-								options={backgroundColors}
-								title='Цвет фона'
-								rootRef={selectRootRef}
-							/>
-						</div>
-						<div>
-							<Select
-								selected={selectedContentWidth}
-								onChange={setContentWidth}
-								options={contentWidthArr}
-								title='Ширина контента'
-								rootRef={selectRootRef}
-							/>
-						</div>
+						<Select
+							selected={selectedFontFamily}
+							onChange={setFontFamily}
+							options={fontFamilyOptions}
+							title='Шрифт'
+							rootRef={selectRootRef}
+						/>
+						<RadioGroup
+							selected={selectedFontSize}
+							name='radio'
+							onChange={setFontSize}
+							options={fontSizeOptions}
+							title='Размер шрифта'
+						/>
+						<Select
+							selected={selectedFontColor}
+							onChange={setFontColor}
+							options={fontColors}
+							title='Цвет шрифта'
+							rootRef={selectRootRef}
+						/>
+						<Separator />
+						<Select
+							selected={selectedBackgroundColor}
+							onChange={setBackgroundColor}
+							options={backgroundColors}
+							title='Цвет фона'
+							rootRef={selectRootRef}
+						/>
+						<Select
+							selected={selectedContentWidth}
+							onChange={setContentWidth}
+							options={contentWidthArr}
+							title='Ширина контента'
+							rootRef={selectRootRef}
+						/>
 						<div className={styles.bottomContainer}>
 							<Button title='Сбросить' type='reset' onClick={resetStyles}/>
 							<Button title='Применить' type='submit'/>

@@ -10,16 +10,16 @@ interface ArrowButtonProps {
     onClick: OnClick;
 }
 
-export const ArrowButton: React.FC<ArrowButtonProps> = ({ onClick }) => {
+export const ArrowButton: React.FC<ArrowButtonProps & { isContainerOpen: boolean }> = ({ onClick, isContainerOpen }) => {
 	return (
 		/* Не забываем указаывать role и aria-label атрибуты для интерактивных элементов */
 		<div
 			role='button'
 			aria-label='Открыть/Закрыть форму параметров статьи'
 			tabIndex={0}
-			className={styles.container}
+			className={`${styles.container} ${isContainerOpen ? styles.container_open : ''}`}
 			onClick={onClick}>
-			<img src={arrow} alt='иконка стрелочки' className={styles.arrow} />
+			<img src={arrow} alt='иконка стрелочки' className={`${styles.arrow} ${isContainerOpen ? styles.arrow_open : ''}`} />
 		</div>
 	);
 };
