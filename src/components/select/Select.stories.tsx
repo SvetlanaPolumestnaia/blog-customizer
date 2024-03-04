@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Select } from './Select';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 const meta: Meta<typeof Select> = {
 	component: Select,
@@ -11,6 +11,8 @@ export default meta;
 type Story = StoryObj<typeof Select>;
 
 const SelectWithState = () => {
+	const selectRootRef = useRef<HTMLDivElement | null>(null);
+
 	const options = [
 		{ title: '1 опция', value: '1 опция', className: '' },
 		{ title: '2 опция', value: '2 опция', className: '' },
@@ -26,6 +28,7 @@ const SelectWithState = () => {
 				onChange={setSelected}
 				options={options}
 				title='Название радиогруппы'
+				rootRef={selectRootRef}
 			/>
 		</>
 	);
