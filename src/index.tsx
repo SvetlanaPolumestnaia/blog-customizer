@@ -13,6 +13,7 @@ const domNode = document.getElementById('root') as HTMLDivElement;
 export const root = createRoot(domNode);
 
 const App = () => {
+	// добавляем стейты стилей и страницы
 	const [appliedStyles, setStyles] = useState(false);
 	const [pageStyles, setPageStyles] = useState<PageStyles>(defaultArticleState);
 

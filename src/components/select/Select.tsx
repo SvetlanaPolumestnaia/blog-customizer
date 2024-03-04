@@ -46,6 +46,7 @@ export const Select = (props: SelectProps & { rootRef: React.RefObject<HTMLDivEl
 		setIsOpen((isOpen) => !isOpen);
 	};
 
+	// Для того, чтобы при клике на селект не закрывалось окно формы
 	const handleSelectClick: MouseEventHandler<HTMLDivElement> = (e) => {
 		e.stopPropagation();
 	};

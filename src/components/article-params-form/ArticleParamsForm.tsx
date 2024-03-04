@@ -27,12 +27,16 @@ interface ArticleParamsFormProps {
   }
 
 export const ArticleParamsForm: React.FC<ArticleParamsFormProps> = ({ setStyles, setPageStyles }) => {
+	// для определения состояния открыая или закрытая форма
 	const [isContainerOpen, setIsContainerOpen] = useState(false);
+	// сохраняем реф контейнера (для определения клика)
 	const containerRef = useRef<HTMLDivElement | null>(null);
+	// сохраняем реф селекта (для предотвращения закрытия по клику на селект)
 	const selectRootRef = useRef<HTMLDivElement | null>(null);
 
+	// для закрытия форма кликом вне формы
 	useEffect(() => {
-		const handleClickOverlay = (e: MouseEvent) => {		
+		const handleClickOutsideForm = (e: MouseEvent) => {		
 			if (isContainerOpen && 
 				containerRef.current && 
 				!containerRef.current.contains(e.target as Node) &&
@@ -40,31 +44,25 @@ export const ArticleParamsForm: React.FC<ArticleParamsFormProps> = ({ setStyles,
 				setIsContainerOpen(false)
 			}
 		}
-		document.addEventListener('click', handleClickOverlay)
+		document.addEventListener('click', handleClickOutsideForm)
 		return () => {
-			document.removeEventListener('click', handleClickOverlay)
+			document.removeEventListener('click', handleClickOutsideForm)
 		}
 	}, [isContainerOpen, containerRef, selectRootRef])
 
+	// для открытия формы
 	const handleArrowButtonClick = () => {
 		setIsContainerOpen(!isContainerOpen);
 	}
-
-	const defaultStyles = {
-		fontFamilyOption: defaultArticleState.fontFamilyOption,
-		fontSizeOption: defaultArticleState.fontSizeOption,
-		fontColor: defaultArticleState.fontColor,
-		backgroundColor: defaultArticleState.backgroundColor,
-		contentWidth: defaultArticleState.contentWidth,
-	  };
 	
-	  const [selectedFontSize, setFontSize] = useState(defaultStyles.fontSizeOption);
-	  const [selectedFontFamily, setFontFamily] = useState(defaultStyles.fontFamilyOption);
-	  const [selectedFontColor, setFontColor] = useState(defaultStyles.fontColor);
-	  const [selectedBackgroundColor, setBackgroundColor] = useState(defaultStyles.backgroundColor);
-	  const [selectedContentWidth, setContentWidth] = useState(defaultStyles.contentWidth);
+	// создание состояний стилей
+	const [selectedFontSize, setFontSize] = useState(defaultArticleState.fontSizeOption);
+	const [selectedFontFamily, setFontFamily] = useState(defaultArticleState.fontFamilyOption);
+	const [selectedFontColor, setFontColor] = useState(defaultArticleState.fontColor);
+	const [selectedBackgroundColor, setBackgroundColor] = useState(defaultArticleState.backgroundColor);
+	const [selectedContentWidth, setContentWidth] = useState(defaultArticleState.contentWidth);
 
-
+	// применение стилей к странице
 	const handleApplyStyles = (e: React.FormEvent) => {
 		e.preventDefault();
 		document.documentElement.style.setProperty('--font-family', selectedFontFamily.value);
@@ -94,22 +92,26 @@ export const ArticleParamsForm: React.FC<ArticleParamsFormProps> = ({ setStyles,
 		  });
 		
 	}
+
+	// сброс формы
 	const resetForm = () => {
-		setFontFamily(defaultStyles.fontFamilyOption);
-		setFontSize(defaultStyles.fontSizeOption);
-		setFontColor(defaultStyles.fontColor);
-		setBackgroundColor(defaultStyles.backgroundColor);
-		setContentWidth(defaultStyles.contentWidth);
+		setFontFamily(defaultArticleState.fontFamilyOption);
+		setFontSize(defaultArticleState.fontSizeOption);
+		setFontColor(defaultArticleState.fontColor);
+		setBackgroundColor(defaultArticleState.backgroundColor);
+		setContentWidth(defaultArticleState.contentWidth);
 	  };
+	
+	// сброси стилей
 	const resetStyles = () => {
-		document.documentElement.style.setProperty('--font-family', defaultStyles.fontFamilyOption.value);
-		document.documentElement.style.setProperty('--font-size', defaultStyles.fontSizeOption.value);
-		document.documentElement.style.setProperty('--font-color', defaultStyles.fontColor.value);
-		document.documentElement.style.setProperty('--container-width', defaultStyles.contentWidth.value);
-		document.documentElement.style.setProperty('--bg-color', defaultStyles.backgroundColor.value);
+		document.documentElement.style.setProperty('--font-family', defaultArticleState.fontFamilyOption.value);
+		document.documentElement.style.setProperty('--font-size', defaultArticleState.fontSizeOption.value);
+		document.documentElement.style.setProperty('--font-color', defaultArticleState.fontColor.value);
+		document.documentElement.style.setProperty('--container-width', defaultArticleState.contentWidth.value);
+		document.documentElement.style.setProperty('--bg-color', defaultArticleState.backgroundColor.value);
 
 		setStyles(false);
-		setPageStyles(defaultStyles);
+		setPageStyles(defaultArticleState);
 		resetForm();
 	  };
 

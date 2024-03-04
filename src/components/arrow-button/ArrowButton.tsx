@@ -4,7 +4,8 @@ import styles from './ArrowButton.module.scss';
 
 /** Функция для обработки открытия/закрытия формы */
 export type OnClick = () => void;
-  
+
+// Добавлен onClick для возможности клика по стрелке (чтобы открылась форма)
 interface ArrowButtonProps {
     onClick: OnClick;
 }
